@@ -66,6 +66,7 @@ router.post("/login", async (req, res) => {
     userID: user._id,
     message: "Login successful. Redirecting...",
     username: user.username,
+    type: "success",
   });
 });
 
