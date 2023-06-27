@@ -16,7 +16,7 @@ router.post(
     const pathParts = path.split("\\");
     const parts = originalname.split(".");
     const ext = parts[parts.length - 1];
-    const newPath = pathParts[0] + "/" + "." + ext;
+    const newPath = pathParts[0] + "." + ext;
     fs.renameSync(path, newPath);
 
     const { title, summary, content, author } = req.body;
