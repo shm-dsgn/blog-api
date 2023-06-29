@@ -48,9 +48,8 @@ router.post(
 
 router.get("/", async (req, res) => {
   const posts = await PostModel.find({})
-    .sort({ createdAt: -1 })
     .populate("author", ["username"])
-    .limit(50);
+    .limit(25);
   res.json(posts);
 });
 

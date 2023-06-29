@@ -35,4 +35,6 @@ mongoose.connect(
   `mongodb+srv://${dbUser}:${dbPassword}@blog.res7iy6.mongodb.net/blog?retryWrites=true&w=majority`
 );
 
-app.listen(3001, () => console.log("Server running on port 3001"));
+const PORT = process.env.PORT || 3001
+
+app.listen(PORT, () => console.log("Server running on port 3001"));
