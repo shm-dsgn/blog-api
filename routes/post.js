@@ -3,7 +3,6 @@ import { PostModel } from "../models/Posts.js";
 import multer from "multer";
 import multers3 from "multer-s3";
 import AWS from "aws-sdk";
-// import sharp from "sharp";
 import { verifyToken } from "./user.js";
 
 const router = express.Router();
@@ -24,11 +23,6 @@ const uploadMiddleware = multer({
     contentType: multers3.AUTO_CONTENT_TYPE,
     key: function (req, file, cb) {
       cb(null, Date.now().toString());
-      // const compressedImage = sharp(file.buffer)
-      //   .resize({ width: 800 })
-      //   .toBuffer();
-
-      // cb(null, Date.now().toString(), compressedImage);
     },
   }),
 });
