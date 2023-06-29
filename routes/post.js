@@ -1,30 +1,49 @@
 import express from "express";
-import fs from "fs";
 import { PostModel } from "../models/Posts.js";
 import multer from "multer";
-const uploadMiddleware = multer({ dest: "uploads/" });
+import multers3 from "multer-s3";
+import AWS from "aws-sdk";
+// import sharp from "sharp";
 import { verifyToken } from "./user.js";
 
 const router = express.Router();
+
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+});
+
+const s3 = new AWS.S3();
+const myBucket = process.env.AWS_BUCKET_NAME;
+
+const uploadMiddleware = multer({
+  storage: multers3({
+    s3: s3,
+    bucket: myBucket,
+    acl: "public-read",
+    contentType: multers3.AUTO_CONTENT_TYPE,
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString());
+      // const compressedImage = sharp(file.buffer)
+      //   .resize({ width: 800 })
+      //   .toBuffer();
+
+      // cb(null, Date.now().toString(), compressedImage);
+    },
+  }),
+});
 
 router.post(
   "/create",
   uploadMiddleware.single("images"),
   verifyToken,
   async (req, res) => {
-    const { originalname, path } = req.file;
-    const pathParts = path.split("\\");
-    const parts = originalname.split(".");
-    const ext = parts[parts.length - 1];
-    const newPath = pathParts[0] + "." + ext;
-    fs.renameSync(path, newPath);
-
     const { title, summary, content, author } = req.body;
     const newPost = new PostModel({
       title,
       summary,
       content,
-      cover: newPath,
+      cover: req.file.location,
       author,
     });
 
@@ -50,9 +69,16 @@ router.get("/:id", async (req, res) => {
 
 router.delete("/delete/:id", async (req, res) => {
   const { id } = req.params;
-  const post = await PostModel.findById(id)
-    .populate("author", ["username"])
-    .deleteOne();
+  const post = await PostModel.findById(id).populate("author", ["username"]);
+
+  const params = {
+    Bucket: myBucket,
+    Key: post.cover.split("/").pop(),
+  };
+  s3.deleteObject(params, function (err, data) {
+    if (err) console.log(err, err.stack);
+  });
+  await post.deleteOne();
   res.json({ message: "Post deleted successfully. Redirecting..." });
 });
 
@@ -63,12 +89,7 @@ router.put(
   async (req, res) => {
     let newPath = null;
     if (req.file) {
-      const { originalname, path } = req.file;
-      const pathParts = path.split("\\");
-      const parts = originalname.split(".");
-      const ext = parts[parts.length - 1];
-      newPath = pathParts[0] + "/" + pathParts[1] + "." + ext;
-      fs.renameSync(path, newPath);
+      newPath = req.file.location;
     }
 
     const { title, summary, content, postId, author } = req.body;
@@ -80,6 +101,14 @@ router.put(
     if (!isAuthorSame) {
       res.status(401).json({ message: "Unauthorized" });
     }
+
+    const params = {
+      Bucket: myBucket,
+      Key: post.cover.split("/").pop(),
+    };
+    s3.deleteObject(params, function (err, data) {
+      if (err) console.log(err, err.stack);
+    });
 
     await post.updateOne({
       title,
