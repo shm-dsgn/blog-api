@@ -47,9 +47,7 @@ router.post(
 );
 
 router.get("/", async (req, res) => {
-  const posts = await PostModel.find({})
-    .populate("author", ["username"])
-    .limit(25);
+  const posts = await PostModel.find({}).sort({ createdAt: -1 }).limit(25);
   res.json(posts);
 });
 
@@ -62,7 +60,7 @@ router.get("/:id", async (req, res) => {
 
 router.delete("/delete/:id", async (req, res) => {
   const { id } = req.params;
-  const post = await PostModel.findById(id).populate("author", ["username"]);
+  const post = await PostModel.findById(id);
 
   const params = {
     Bucket: myBucket,
@@ -86,9 +84,7 @@ router.put(
     }
 
     const { title, summary, content, postId, author } = req.body;
-    const post = await PostModel.findById(postId).populate("author", [
-      "username",
-    ]);
+    const post = await PostModel.findById(postId);
     const isAuthorSame =
       JSON.stringify(author) === JSON.stringify(post.author._id);
     if (!isAuthorSame) {
