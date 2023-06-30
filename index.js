@@ -3,11 +3,6 @@ import cors from "cors";
 import mongoose from "mongoose";
 //enables the use of environment variables
 import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -23,10 +18,6 @@ app.use(cors());
 app.use("/auth", userRouter);
 app.use("/post", postRouter);
 
-//get images from the upload folder so that it can be displayed in the webpage using express.static
-// specify the path to the uploads directory
-app.use("/uploads", express.static(__dirname + "/uploads"));
-
 //connect to mongodb
 const dbUser = process.env.DB_USER;
 const dbPassword = process.env.DB_PASSWORD;
@@ -37,4 +28,4 @@ mongoose.connect(
 
 const PORT = process.env.PORT || 3001
 
-app.listen(PORT, () => console.log("Server running on port 3001"));
+app.listen(PORT, () => console.log(`Server running on port ${PORT} `));
