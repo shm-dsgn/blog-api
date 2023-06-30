@@ -1,5 +1,6 @@
 import express from "express";
 import { PostModel } from "../models/Posts.js";
+import { UserModel } from "../models/Users.js";
 import multer from "multer";
 import multers3 from "multer-s3";
 import AWS from "aws-sdk";
@@ -42,9 +43,29 @@ router.post(
     });
 
     await newPost.save();
+
+    const user = await UserModel.findById(author);
+    user.myPosts.push(newPost._id); // Add the new post to the user's posts array
+    await user.save();
+
     res.json({ message: "Post created successfully. Redirecting..." });
   }
 );
+
+router.get("/myprofile/:id", async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.id);
+    const myPosts = await PostModel.find({
+      _id: { $in: user.myPosts },
+    });
+    res.json({
+      myPosts,
+      username: user.username,
+    });
+  } catch (err) {
+    res.json(err);
+  }
+});
 
 router.get("/", async (req, res) => {
   const posts = await PostModel.find({}).sort({ createdAt: -1 }).limit(25);
@@ -88,7 +109,7 @@ router.put(
     const isAuthorSame =
       JSON.stringify(author) === JSON.stringify(post.author._id);
     if (!isAuthorSame) {
-      res.status(401).json({ message: "Unauthorized" });
+      return res.json({ message: "Unauthorized" });
     }
 
     const params = {
