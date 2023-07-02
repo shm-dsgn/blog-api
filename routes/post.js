@@ -99,32 +99,34 @@ router.put(
   uploadMiddleware.single("images"),
   verifyToken,
   async (req, res) => {
-    let newPath = null;
-    if (req.file) {
-      newPath = req.file.location;
-    }
-
     const { title, summary, content, postId, author } = req.body;
     const post = await PostModel.findById(postId);
+
     const isAuthorSame =
       JSON.stringify(author) === JSON.stringify(post.author._id);
     if (!isAuthorSame) {
       return res.json({ message: "Unauthorized" });
     }
 
-    const params = {
-      Bucket: myBucket,
-      Key: post.cover.split("/").pop(),
-    };
-    s3.deleteObject(params, function (err, data) {
-      if (err) console.log(err, err.stack);
-    });
+    let newPath = post.cover;
+
+    if (req.file) {
+      newPath = req.file.location;
+
+      const params = {
+        Bucket: myBucket,
+        Key: post.cover.split("/").pop(),
+      };
+      s3.deleteObject(params, function (err, data) {
+        if (err) console.log(err, err.stack);
+      });
+    }
 
     await post.updateOne({
       title,
       summary,
       content,
-      cover: newPath ? newPath : post.cover,
+      cover: newPath,
     });
     res.json({ message: "Post updated successfully. Redirecting..." });
   }
