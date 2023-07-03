@@ -6,9 +6,9 @@ A simple blog app that lets users create blog posts with images, edit them and d
 
 [Live Website Link](https://shm-blog-app.onrender.com)
 
-[API Link](blog-api-production-bcb5.up.railway.app)
+[API Link](https://blog-api-production-bcb5.up.railway.app)
 
-You can see the frontend code here: [Frontend repository](https://github.com/shm-dsgn/blogApp)
+You can see the frontend code here: [Frontend repository](https://github.com/shm-dsgn/BlogOn)
 
 [![CodeFactor](https://www.codefactor.io/repository/github/shm-dsgn/blog-api/badge)](https://www.codefactor.io/repository/github/shm-dsgn/blog-api)
 
