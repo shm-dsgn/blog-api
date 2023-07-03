@@ -1,6 +1,6 @@
 <img src='https://drive.google.com/uc?id=10aEwKjOdN8nxq_IRALMt8WQz-qc8OTce' width=108px/>
 
-# Blog App by shm.
+# BlogOn by shm.
 
 A simple blog app that lets users create blog posts with images, edit them and delete them.
 
@@ -12,10 +12,9 @@ You can see the frontend code here: [Frontend repository](https://github.com/shm
 
 [![CodeFactor](https://www.codefactor.io/repository/github/shm-dsgn/blog-api/badge)](https://www.codefactor.io/repository/github/shm-dsgn/blog-api)
 
-
 ## Tech Stack
 
-MERN Stack: 
+MERN Stack:
 
 ![MongoDB](https://img.shields.io/badge/-MongoDB-22272e?logo=mongodb) ![Express](https://img.shields.io/badge/-Express-22272e?logo=express) ![React](https://img.shields.io/badge/-React-22272e?logo=react) ![Node.js](https://img.shields.io/badge/-Node.js-22272e?logo=node.js)
 
@@ -32,7 +31,7 @@ MERN Stack:
 
 ## Installation
 
-To run the Blog App API project locally, follow these steps:
+To run the BlogOn API project locally, follow these steps:
 
 1. Clone the repository to your local machine:
 
@@ -47,7 +46,6 @@ cd blog-api
 ```
 
 3. Create a `.env` file in the project directory.
-
 4. Create the follwing variables in the `.env` file:
 
 ```bash
@@ -75,7 +73,7 @@ npm install
 
 ## Usage
 
-To start the development backend server and view the Blog App API, run the following command:
+To start the development backend server and view the BlogOn API, run the following command:
 
 ```bash
 npm start
