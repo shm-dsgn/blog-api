@@ -4,7 +4,8 @@ import { UserModel } from "../models/Users.js";
 import multer from "multer";
 import multers3 from "multer-s3";
 import AWS from "aws-sdk";
-import { verifyToken } from "./user.js";
+import { verifyToken } from "../middlewares/verifyToken.js";
+import { checkToxic } from "../middlewares/checkToxic.js";
 
 const router = express.Router();
 
@@ -32,6 +33,7 @@ router.post(
   "/create",
   uploadMiddleware.single("images"),
   verifyToken,
+  checkToxic,
   async (req, res) => {
     const { title, summary, content, author } = req.body;
     const newPost = new PostModel({
@@ -48,7 +50,7 @@ router.post(
     user.myPosts.push(newPost._id); // Add the new post to the user's posts array
     await user.save();
 
-    res.json({ message: "Post created successfully. Redirecting..." });
+    res.json({ message: "Post created successfully. Redirecting...", type: "success",});
   }
 );
 
@@ -98,6 +100,7 @@ router.put(
   "/edit",
   uploadMiddleware.single("images"),
   verifyToken,
+  checkToxic,
   async (req, res) => {
     const { title, summary, content, postId, author } = req.body;
     const post = await PostModel.findById(postId);
@@ -128,7 +131,7 @@ router.put(
       content,
       cover: newPath,
     });
-    res.json({ message: "Post updated successfully. Redirecting..." });
+    res.json({ message: "Post updated successfully. Redirecting...", type: "success", });
   }
 );
 
