@@ -9,7 +9,7 @@ dotenv.config();
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
-  console.log(req);
+  // console.log(req);
   const { username, password } = req.body;
 
   if (!username || !password) {
