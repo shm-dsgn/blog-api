@@ -20,6 +20,7 @@ MERN Stack:
 
 ## Technologies Used
 
+- **tensorflowJS** (for toxicity detection in the blog post)
 - **aws-sdk** (to interact with various AWS services)
 - **bcrypt** (for password hashing)
 - **cors** (helps in enabling CORS)
@@ -55,6 +56,7 @@ DB_PASSWORD = <MondoDB Database password>
 AWS_ACCESS_KEY_ID = <AWS access key id of the user who has permissions of S3 >
 AWS_SECRET_ACCESS_KEY = <AWS secret access key of the user who has permissions of S3 >
 AWS_BUCKET_NAME = <S3 bucket name>
+CAPTCHA_SECRET = <Google reCAPTCHA v2 secret key>
 ```
 
 5. Change the Mongoose connection string in `index.js` to your own MongoDB connection string.
