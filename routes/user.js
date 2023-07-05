@@ -2,6 +2,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import axios from "axios";
 import { UserModel } from "../models/Users.js";
 
 dotenv.config();
@@ -39,7 +40,17 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, captchaToken } = req.body;
+
+  const captchaData = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_SECRET}&response=${captchaToken}`)
+  const captchaSuccess = captchaData.data.success
+
+  if (!captchaSuccess) {
+    return res.json({
+      message: "Captcha verification failed.",
+      type: "error",
+    });
+  }
 
   if (!username || !password) {
     return res.json({
@@ -69,21 +80,5 @@ router.post("/login", async (req, res) => {
     type: "success",
   });
 });
-
-// router.post("/verify-captcha", async (req, res) => {
-//   const { token, SECRET_KEY } = req.body;
-
-//   const url = `https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${token}`;
-
-//   const response = await fetch(url, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     }
-//   })
-//   const data = await response.json();
-//   res.json(data);
-
-// })
 
 export { router as userRouter };
