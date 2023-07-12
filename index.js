@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 //enables the use of environment variables
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -13,7 +14,12 @@ const app = express();
 //coverts all incoming request to json
 app.use(express.json());
 //CORS supports secure cross-origin requests and data transfers between browsers and servers
-app.use(cors());
+const corsOptions = {
+  origin: true,
+  credentials: true,
+}
+app.use(cors(corsOptions));
+app.use(cookieParser());
 
 app.use("/auth", userRouter);
 app.use("/post", postRouter);
@@ -24,7 +30,9 @@ const dbPassword = process.env.DB_PASSWORD;
 
 mongoose.connect(
   `mongodb+srv://${dbUser}:${dbPassword}@blog.res7iy6.mongodb.net/blog?retryWrites=true&w=majority`
-);
+).then(()=>{
+  console.log("Connected to MongoDB...");
+});
 
 const PORT = process.env.PORT || 3001
 
