@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 //CORS supports secure cross-origin requests and data transfers between browsers and servers
 const corsOptions = {
-  origin: true,
+  origin: 'https://shm-blog-app.onrender.com',
   credentials: true,
 }
 app.use(cors(corsOptions));
