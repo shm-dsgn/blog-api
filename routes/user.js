@@ -85,12 +85,14 @@ router.post("/login", async (req, res) => {
     maxAge: 1000 * 60 * 60 * 24,
     sameSite: "none",
     secure: true,
+    domain: ".onrender.com",
   });
 
   res.cookie("access_token_state", true, {
     maxAge: 1000 * 60 * 60 * 24,
     sameSite: "none",
     secure: true,
+    domain: ".onrender.com",
   });
 
   res.json({
